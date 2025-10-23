@@ -3,6 +3,7 @@
 
 #include "LobbyWidget.h"
 
+#include "MyButton.h"
 #include "NetGameInstance.h"
 #include "Components/Button.h"
 #include "Components/EditableTextBox.h"
@@ -11,6 +12,7 @@
 #include "Components/WidgetSwitcher.h"
 #include "SessionInfoWidget.h"
 #include "Components/ScrollBox.h"
+#include "Logging/StructuredLogFormat.h"
 
 void ULobbyWidget::NativeConstruct()
 {
@@ -42,6 +44,12 @@ void ULobbyWidget::NativeConstruct()
 	// 뒤로가기 버튼 클릭시 호출되는 함수 등록
 	btnBackFromCreate->OnClicked.AddDynamic(this, &ULobbyWidget::ULobbyWidget::OnClickBack);
 	btnBackFromFind->OnClicked.AddDynamic(this, &ULobbyWidget::ULobbyWidget::OnClickBack);
+
+	button_01->buttonIdx = 100;
+	button_01->onClick.BindUObject(this, &ULobbyWidget::OnClick);
+
+	button_02->buttonIdx = 200;
+	button_02->onClick.BindUObject(this, &ULobbyWidget::OnClick);
 }
 
 void ULobbyWidget::OnClickGoCreate()
@@ -116,4 +124,9 @@ void ULobbyWidget::OnFindComplete(int32 idx, FString sessionName)
 void ULobbyWidget::OnClickBack()
 {
 	widgetSwitcher->SetActiveWidgetIndex(0);
+}
+
+void ULobbyWidget::OnClick(int32 idx)
+{
+	UE_LOG(LogTemp, Warning, TEXT("idx : %d"), idx);
 }

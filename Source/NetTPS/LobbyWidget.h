@@ -92,4 +92,11 @@ public:
 	// 뒤로 가기 눌렀을 때 호출되는 함수
 	UFUNCTION()
 	void OnClickBack();
+
+	UPROPERTY(meta=(BindWidget))
+	class UMyButton* button_01;
+	UPROPERTY(meta=(BindWidget))
+	class UMyButton* button_02;
+	UFUNCTION()
+	void OnClick(int32 idx);
 };
