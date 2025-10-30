@@ -5,6 +5,7 @@
 
 #include "BossAttackJumpState.h"
 #include "BossIdleState.h"
+#include "Net/UnrealNetwork.h"
 
 
 // Sets default values
@@ -19,12 +20,15 @@ void ABoss::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// 상태 클래스들 추가
-	stateList.Add(MakeShared<BossIdleState>(this));
-	stateList.Add(MakeShared<BossAttackJumpState>(this));
+	if (HasAuthority())
+	{
+		// 상태 클래스들 추가
+		stateList.Add(MakeShared<BossIdleState>(this));
+		stateList.Add(MakeShared<BossAttackJumpState>(this));
 
-	// 초기 상태를 IDLE 로
-	ChangeState(EBossState::IDLE);
+		// 초기 상태를 IDLE 로
+		ChangeState(EBossState::IDLE);
+	}	
 }
 
 // Called every frame
@@ -38,6 +42,15 @@ void ABoss::Tick(float DeltaTime)
 		currStateClass->OnUpdate(DeltaTime);
 	}
 }
+
+void ABoss::GetLifetimeReplicatedProps(
+	TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ABoss, currState);
+}
+
 
 // Called to bind functionality to input
 void ABoss::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

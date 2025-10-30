@@ -10,6 +10,7 @@ public:
 	virtual void OnEnter() override;
 	virtual void OnUpdate(float deltaTime) override;
 	void GetJumpInitialVelocity();
+	void LookTarget();
 
 	TArray<AActor*> allPlayer;
 };

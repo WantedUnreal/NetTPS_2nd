@@ -4,6 +4,7 @@
 #include "NetTPSCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 BossAttackJumpState::BossAttackJumpState(class ABoss* ownedPawn)
 	: BossStateBase(ownedPawn)
@@ -44,6 +45,8 @@ void BossAttackJumpState::OnEnter()
 		boss->target = Cast<ANetTPSCharacter>(allPlayer[farthestIdx]);
 		// 점프!
 		GetJumpInitialVelocity();
+		// 타겟을 바라보자.
+		LookTarget();
 	}
 }
 
@@ -88,4 +91,16 @@ void BossAttackJumpState::GetJumpInitialVelocity()
 
 	// velocity 값으로 움직여라
 	boss->LaunchCharacter(velocity, true, true);
+}
+
+void BossAttackJumpState::LookTarget()
+{
+	// 타겟을 향하는 방향을 구하자.
+	FVector toTarget = boss->target->GetActorLocation() - boss->GetActorLocation();
+	// 수직 성분 0 으로 하자.
+	toTarget.Z = 0;
+	toTarget.Normalize();
+	// 타겟을 바라보는 각도를 구하자.
+	FRotator rot = UKismetMathLibrary::MakeRotFromXZ(toTarget, FVector::UpVector);
+	boss->SetActorRotation(rot);
 }
