@@ -53,6 +53,9 @@ void UNetGameInstance::CreateMySession(FString displayName, int32 playerCount)
 	sessionSettings.bShouldAdvertise = true;
 	// 세션 최대 참여 인원 설정
 	sessionSettings.NumPublicConnections = playerCount;
+	// 세션 중간에 참여 가능 여부 설정
+	sessionSettings.bAllowJoinInProgress = true;
+	
 	// 커스텀 정보
 	// displayName 을 Base64 로 변환
 	displayName = StringBase64Encode(displayName);
